@@ -7,36 +7,34 @@ This code simulates the swarming behaviour of bird-like objects ("boids").
 
 import numpy as np
 
-def update_boids(boids):
-    xs,ys,xvs,yvs=boids
+def update_boids(boids_x,boids_y,boid_x_velocities,boid_y_velocities):
     # Fly towards the middle
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            xvs[i]=xvs[i]+(xs[j]-xs[i])*0.01/len(xs)
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            yvs[i]=yvs[i]+(ys[j]-ys[i])*0.01/len(xs)
+    for i in range(len(boids_x)):
+        for j in range(len(boids_x)):
+            boid_x_velocities[i]=boid_x_velocities[i]+(boids_x[j]-boids_x[i])*0.01/len(boids_x)
+    for i in range(len(boids_x)):
+        for j in range(len(boids_x)):
+            boid_y_velocities[i]=boid_y_velocities[i]+(boids_y[j]-boids_y[i])*0.01/len(boids_x)
     # Fly away from nearby boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 100:
-                xvs[i]=xvs[i]+(xs[i]-xs[j])
-                yvs[i]=yvs[i]+(ys[i]-ys[j])
+    for i in range(len(boids_x)):
+        for j in range(len(boids_x)):
+            if (boids_x[j]-boids_x[i])**2 + (boids_y[j]-boids_y[i])**2 < 100:
+                boid_x_velocities[i]=boid_x_velocities[i]+(boids_x[i]-boids_x[j])
+                boid_y_velocities[i]=boid_y_velocities[i]+(boids_y[i]-boids_y[j])
     # Try to match speed with nearby boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 10000:
-                xvs[i]=xvs[i]+(xvs[j]-xvs[i])*0.125/len(xs)
-                yvs[i]=yvs[i]+(yvs[j]-yvs[i])*0.125/len(xs)
+    for i in range(len(boids_x)):
+        for j in range(len(boids_x)):
+            if (boids_x[j]-boids_x[i])**2 + (boids_y[j]-boids_y[i])**2 < 10000:
+                boid_x_velocities[i]=boid_x_velocities[i]+(boid_x_velocities[j]-boid_x_velocities[i])*0.125/len(boids_x)
+                boid_y_velocities[i]=boid_y_velocities[i]+(boid_y_velocities[j]-boid_y_velocities[i])*0.125/len(boids_x)
     # Move according to velocities
-    for i in range(len(xs)):
-        xs[i]=xs[i]+xvs[i]
-        ys[i]=ys[i]+yvs[i]
+    for i in range(len(boids_x)):
+        boids_x[i]=boids_x[i]+boid_x_velocities[i]
+        boids_y[i]=boids_y[i]+boid_y_velocities[i]
 
 if __name__ == "__main__":
     boids_x=np.random.uniform(-450, 50., size=50)
     boids_y=np.random.uniform(300, 600., size = 50)
     boid_x_velocities=np.random.uniform(0,10, size=50)
     boid_y_velocities=np.random.uniform(-20,20,size=50)
-    boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
-    update_boids(boids)
+    update_boids(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
