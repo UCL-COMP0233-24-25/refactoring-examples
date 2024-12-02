@@ -10,34 +10,35 @@ from matplotlib import animation
 
 import random
 
-boids_x=[random.uniform(-450,50.0) for x in range(50)]
-boids_y=[random.uniform(300.0,600.0) for x in range(50)]
+boid_x_positions=[random.uniform(-450,50.0) for x in range(50)]
+boid_y_positions=[random.uniform(300.0,600.0) for x in range(50)]
 boid_x_velocities=[random.uniform(0,10.0) for x in range(50)]
 boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
-boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
+boids=(boid_x_positions,boid_y_positions,boid_x_velocities,boid_y_velocities)
 
 def update_boids(boids):
-    xs,ys,xvs,yvs=boids
+    boid_x_position,boid_y_position,boid_x_velocity,boid_y_velocity=boids
+
     # Fly towards the middle
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            xvs[i]=xvs[i]+(xs[j]-xs[i])*0.01/len(xs)
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            yvs[i]=yvs[i]+(ys[j]-ys[i])*0.01/len(xs)
+    for i in range(len(boid_x_position)):
+        for j in range(len(boid_x_position)):
+            boid_x_velocity[i]=boid_x_velocity[i]+(boid_x_position[j]-boid_x_position[i])*0.01/len(boid_x_position)
+    for i in range(len(boid_x_position)):
+        for j in range(len(boid_x_position)):
+            boid_y_velocity[i]=boid_y_velocity[i]+(boid_y_position[j]-boid_y_position[i])*0.01/len(boid_x_position)
     # Fly away from nearby boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 100:
-                xvs[i]=xvs[i]+(xs[i]-xs[j])
-                yvs[i]=yvs[i]+(ys[i]-ys[j])
+    for i in range(len(boid_x_position)):
+        for j in range(len(boid_x_position)):
+            if (boid_x_position[j]-boid_x_position[i])**2 + (boid_y_position[j]-boid_y_position[i])**2 < 100:
+                boid_x_velocity[i]=boid_x_velocity[i]+(boid_x_position[i]-boid_x_position[j])
+                boid_y_velocity[i]=boid_y_velocity[i]+(boid_y_position[i]-boid_y_position[j])
     # Try to match speed with nearby boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 10000:
-                xvs[i]=xvs[i]+(xvs[j]-xvs[i])*0.125/len(xs)
-                yvs[i]=yvs[i]+(yvs[j]-yvs[i])*0.125/len(xs)
+    for i in range(len(boid_x_position)):
+        for j in range(len(boid_x_position)):
+            if (boid_x_position[j]-boid_x_position[i])**2 + (boid_y_position[j]-boid_y_position[i])**2 < 10000:
+                boid_x_velocity[i]=boid_x_velocity[i]+(boid_x_velocity[j]-boid_x_velocity[i])*0.125/len(boid_x_position)
+                boid_y_velocity[i]=boid_y_velocity[i]+(boid_y_velocity[j]-boid_y_velocity[i])*0.125/len(boid_x_position)
     # Move according to velocities
-    for i in range(len(xs)):
-        xs[i]=xs[i]+xvs[i]
-        ys[i]=ys[i]+yvs[i]
+    for i in range(len(boid_x_position)):
+        boid_x_position[i]=boid_x_position[i]+boid_x_velocity[i]
+        boid_y_position[i]=boid_y_position[i]+boid_y_velocity[i]
