@@ -2,16 +2,36 @@
 
 from math import sin, cos
 from matplotlib import pyplot as plt
-s=1
-d=[[0,1,0]]
-plt.plot([0,0],[0,1])
+
+length = 1
+#  (0: x, 1 :y, 0: angle )
+coordinate = [[0, 1, 0]]
+plt.plot([0, 0], [0, 1])
 for i in range(5):
-    n=[]
-    for j in range(len(d)): #loop over d
-        n.append([d[j][0]+s*sin(d[j][2]-0.1), d[j][1]+s*cos(d[j][2]-0.1), d[j][2]-0.1])
-        n.append([d[j][0]+s*sin(d[j][2]+0.1), d[j][1]+s*cos(d[j][2]+0.1), d[j][2]+0.1])
-        plt.plot([d[j][0], n[-2][0]],[d[j][1], n[-2][1]])
-        plt.plot([d[j][0], n[-1][0]],[d[j][1], n[-1][1]])
-    d=n
-    s*=0.6
-plt.savefig('tree.png')
+    next_cordinates = []
+    for j in range(len(coordinate)):  # loop over d
+        next_cordinates.append(
+            [
+                coordinate[j][0] + length * sin(coordinate[j][2] - 0.1),
+                coordinate[j][1] + length * cos(coordinate[j][2] - 0.1),
+                coordinate[j][2] - 0.1,
+            ]
+        )
+        next_cordinates.append(
+            [
+                coordinate[j][0] + length * sin(coordinate[j][2] + 0.1),
+                coordinate[j][1] + length * cos(coordinate[j][2] + 0.1),
+                coordinate[j][2] + 0.1,
+            ]
+        )
+        plt.plot(
+            [coordinate[j][0], next_cordinates[-2][0]],
+            [coordinate[j][1], next_cordinates[-2][1]],
+        )
+        plt.plot(
+            [coordinate[j][0], next_cordinates[-1][0]],
+            [coordinate[j][1], next_cordinates[-1][1]],
+        )
+    coordinate = next_cordinates
+    length *= 0.6
+plt.savefig("tree.png")
