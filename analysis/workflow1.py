@@ -1,4 +1,4 @@
-from math import *
+import numpy as np
 
 # read sample files
 
@@ -20,11 +20,11 @@ if __name__ == "__main__":
 
     results = []
     for i in range(len(data1)):
-        s = 0
-        for j in range(len(w)):
-            d = data1[i][j] - data2[i][j]
-            s += w[j] * abs(d)
-        results.append(s)
+        row1 = data1[i]
+        row2 = data2[i]
+        diffs = np.abs(row1-row2)
+        sum_weighted_diffs = np.sum(diffs*w)
+        results.append(sum_weighted_diffs)
 
     critical = 0
     for i in range(len(results)):  # for all i
