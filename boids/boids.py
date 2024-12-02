@@ -17,27 +17,30 @@ boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 def update_boids(boids):
-    xs,ys,xvs,yvs=boids
+    x_positions,y_positions,x_velocities,y_velocities=boids
+    middle_param=0.01
     # Fly towards the middle
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            xvs[i]=xvs[i]+(xs[j]-xs[i])*0.01/len(xs)
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            yvs[i]=yvs[i]+(ys[j]-ys[i])*0.01/len(xs)
+    for i in range(len(x_positions)):
+        for j in range(len(x_positions)):
+            x_velocities[i]=x_velocities[i]+(x_positions[j]-x_positions[i])*middle_param/len(x_positions)
+    for i in range(len(x_positions)):
+        for j in range(len(x_positions)):
+            y_velocities[i]=y_velocities[i]+(y_positions[j]-y_positions[i])*middle_param/len(x_positions)
     # Fly away from nearby boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 100:
-                xvs[i]=xvs[i]+(xs[i]-xs[j])
-                yvs[i]=yvs[i]+(ys[i]-ys[j])
+    nearby_away = 100
+    for i in range(len(x_positions)):
+        for j in range(len(x_positions)):
+            if (x_positions[j]-x_positions[i])**2 + (y_positions[j]-y_positions[i])**2 < nearby_away:
+                x_velocities[i]=x_velocities[i]+(x_positions[i]-x_positions[j])
+                y_velocities[i]=y_velocities[i]+(y_positions[i]-y_positions[j])
     # Try to match speed with nearby boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 10000:
-                xvs[i]=xvs[i]+(xvs[j]-xvs[i])*0.125/len(xs)
-                yvs[i]=yvs[i]+(yvs[j]-yvs[i])*0.125/len(xs)
+    nearby_match_speed = 10000
+    for i in range(len(x_positions)):
+        for j in range(len(x_positions)):
+            if (x_positions[j]-x_positions[i])**2 + (y_positions[j]-y_positions[i])**2 < nearby_match_speed:
+                x_velocities[i]=x_velocities[i]+(x_velocities[j]-x_velocities[i])*0.125/len(x_positions)
+                y_velocities[i]=y_velocities[i]+(y_velocities[j]-y_velocities[i])*0.125/len(x_positions)
     # Move according to velocities
-    for i in range(len(xs)):
-        xs[i]=xs[i]+xvs[i]
-        ys[i]=ys[i]+yvs[i]
+    for i in range(len(x_positions)):
+        x_positions[i]=x_positions[i]+x_velocities[i]
+        y_positions[i]=y_positions[i]+y_velocities[i]
