@@ -10,7 +10,7 @@ def read_file(filename):
             row_items = line.split(',')
             row = [float(item.strip()) for item in row_items]
             data.append(row)
-    return data
+    return np.array(data)
 
 
 if __name__ == "__main__":
