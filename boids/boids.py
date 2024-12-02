@@ -4,40 +4,52 @@ A deliberately bad implementation of
 for use as an exercise on refactoring.
 This code simulates the swarming behaviour of bird-like objects ("boids").
 """
+from dataclasses import dataclass
 
-from matplotlib import pyplot as plt
-from matplotlib import animation
+import numpy as np
 
-import random
+@dataclass
+class Boids:
+    x: float
+    y: float
+    velocity_x: float
+    velocity_y: float
 
-boids_x=[random.uniform(-450,50.0) for x in range(50)]
-boids_y=[random.uniform(300.0,600.0) for x in range(50)]
-boid_x_velocities=[random.uniform(0,10.0) for x in range(50)]
-boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
-boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
+def distance(boid1: Boids, boid2:Boids):
+    return (boid1.x - boid2.x)**2 + (boid1.y - boid2.y)**2
 
-def update_boids(boids):
-    xs,ys,xvs,yvs=boids
+def update_boids(boids_lst: list[Boids],
+                 towards_middle_coefficient=0.01, fly_away_distance=100, nearby_distance=10000,
+                 nearby_coefficient=0.125):
     # Fly towards the middle
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            xvs[i]=xvs[i]+(xs[j]-xs[i])*0.01/len(xs)
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            yvs[i]=yvs[i]+(ys[j]-ys[i])*0.01/len(xs)
+    for boid in boids_lst:
+        for other_boid in boids_lst:
+            boid.velocity_x = boid.velocity_x + (other_boid.x- boid.x)*towards_middle_coefficient/len(boids_lst)
+            boid.velocity_y = boid.velocity_y + (other_boid.y - boid.y)*towards_middle_coefficient/len(boids_lst)
     # Fly away from nearby boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 100:
-                xvs[i]=xvs[i]+(xs[i]-xs[j])
-                yvs[i]=yvs[i]+(ys[i]-ys[j])
+    for boid in boids_lst:
+        for other_boid in boids_lst:
+            if distance(boid, other_boid) < fly_away_distance:
+                boid.velocity_x += boid.x - other_boid.x
+                boid.velocity_y += boid.y - other_boid.y
     # Try to match speed with nearby boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
-            if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 10000:
-                xvs[i]=xvs[i]+(xvs[j]-xvs[i])*0.125/len(xs)
-                yvs[i]=yvs[i]+(yvs[j]-yvs[i])*0.125/len(xs)
+    for boid in boids_lst:
+        for other_boid in boids_lst:
+            if distance(boid, other_boid) < nearby_distance:
+                boid.velocity_x += (other_boid.velocity_x - boid.velocity_x)*nearby_coefficient/len(boids_lst)
+                boid.velocity_y += (other_boid.velocity_y - boid.velocity_y)*nearby_coefficient/len(boids_lst)
     # Move according to velocities
-    for i in range(len(xs)):
-        xs[i]=xs[i]+xvs[i]
-        ys[i]=ys[i]+yvs[i]
+    for boid in boids_lst:
+        boid.x += boid.velocity_x
+        boid.y += boid.velocity_y
+
+if __name__ == "__main__":
+    population = 50
+    boids_lst = []
+    x=np.random.uniform(-450, 50., size=50)
+    y=np.random.uniform(300, 600., size = 50)
+    velocity_x=np.random.uniform(0, 10, size=50)
+    velocity_y=np.random.uniform(-20, 20, size=50)
+    for i in range(population):
+        boids_lst.append(Boids(x[i], y[i], velocity_x[i], velocity_y[i]))
+    update_boids(boids_lst)
