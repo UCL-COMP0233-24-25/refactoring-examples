@@ -1,16 +1,10 @@
-from workflow1 import read_file
+from utils import read_file, sum_weighted_diffs
 
 data1 = read_file("samples1.csv")
 data2 = read_file("samples2.csv")
 w = read_file("weights.csv")[0]
 
-results = []
-for i in range(len(data1)):
-    s = 0
-    for j in range(len(w)):
-        d = data1[i][j] - data2[i][j]
-        s += w[j] * abs(d)
-    results.append(s)
+results = sum_weighted_diffs(data1, data2, w)
 
 # critical = 0
 # for i in range(len(results)):
