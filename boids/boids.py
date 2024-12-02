@@ -5,15 +5,7 @@ for use as an exercise on refactoring.
 This code simulates the swarming behaviour of bird-like objects ("boids").
 """
 
-import random
 import numpy as np
-from numpy.ma.core import shape
-
-boids_x=np.random.uniform(-450, 50., size=50)
-boids_y=np.random.uniform(300, 600., size = 50)
-boid_x_velocities=np.random.uniform(0,10, size=50)
-boid_y_velocities=np.random.uniform(-20,20,size=50)
-boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 def update_boids(boids):
     xs,ys,xvs,yvs=boids
@@ -40,3 +32,11 @@ def update_boids(boids):
     for i in range(len(xs)):
         xs[i]=xs[i]+xvs[i]
         ys[i]=ys[i]+yvs[i]
+
+if __name__ == "__main__":
+    boids_x=np.random.uniform(-450, 50., size=50)
+    boids_y=np.random.uniform(300, 600., size = 50)
+    boid_x_velocities=np.random.uniform(0,10, size=50)
+    boid_y_velocities=np.random.uniform(-20,20,size=50)
+    boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
+    update_boids(boids)
