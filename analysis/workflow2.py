@@ -1,32 +1,8 @@
-from math import *
+from workflow1 import read_file
 
-# read sample files
-
-#with open('data1.csv') as file1:
-with open('samples1.csv') as file1:
-    lines1 = file1.readlines()
-    data1 = []
-    for line in lines1:
-        row = []
-        for n in line.split(','):
-            row.append(float(n.strip()))
-        data1.append(row)
-
-#with open('data2.csv') as file1:
-with open('samples2.csv') as file2:
-    lines2 = file2.readlines()
-    data2 = []
-    for line in lines2:
-        row = []
-        for n in line.split(','):
-            row.append(float(n.strip()))
-        data2.append(row)
-
-with open('weights.csv') as filew:
-    linew = filew.read()
-    w = []
-    for n in linew.split(','):
-        w.append(float(n.strip()))
+data1 = read_file("samples1.csv")
+data2 = read_file("samples2.csv")
+w = read_file("weights.csv")[0]
 
 results = []
 for i in range(len(data1)):
