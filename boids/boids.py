@@ -7,26 +7,28 @@ This code simulates the swarming behaviour of bird-like objects ("boids").
 
 import numpy as np
 
-def update_boids(boids_x,boids_y,boid_x_velocities,boid_y_velocities):
+def update_boids(boids_x,boids_y,boid_x_velocities,boid_y_velocities,
+                 towards_middle_coefficient=0.01, fly_away_distance=100, nearby_distance=10000,
+                 nearby_coefficient=0.125):
     # Fly towards the middle
     for i in range(len(boids_x)):
         for j in range(len(boids_x)):
-            boid_x_velocities[i]=boid_x_velocities[i]+(boids_x[j]-boids_x[i])*0.01/len(boids_x)
+            boid_x_velocities[i]=boid_x_velocities[i]+(boids_x[j]-boids_x[i])*towards_middle_coefficient/len(boids_x)
     for i in range(len(boids_x)):
         for j in range(len(boids_x)):
-            boid_y_velocities[i]=boid_y_velocities[i]+(boids_y[j]-boids_y[i])*0.01/len(boids_x)
+            boid_y_velocities[i]=boid_y_velocities[i]+(boids_y[j]-boids_y[i])*towards_middle_coefficient/len(boids_x)
     # Fly away from nearby boids
     for i in range(len(boids_x)):
         for j in range(len(boids_x)):
-            if (boids_x[j]-boids_x[i])**2 + (boids_y[j]-boids_y[i])**2 < 100:
+            if (boids_x[j]-boids_x[i])**2 + (boids_y[j]-boids_y[i])**2 < fly_away_distance:
                 boid_x_velocities[i]=boid_x_velocities[i]+(boids_x[i]-boids_x[j])
                 boid_y_velocities[i]=boid_y_velocities[i]+(boids_y[i]-boids_y[j])
     # Try to match speed with nearby boids
     for i in range(len(boids_x)):
         for j in range(len(boids_x)):
-            if (boids_x[j]-boids_x[i])**2 + (boids_y[j]-boids_y[i])**2 < 10000:
-                boid_x_velocities[i]=boid_x_velocities[i]+(boid_x_velocities[j]-boid_x_velocities[i])*0.125/len(boids_x)
-                boid_y_velocities[i]=boid_y_velocities[i]+(boid_y_velocities[j]-boid_y_velocities[i])*0.125/len(boids_x)
+            if (boids_x[j]-boids_x[i])**2 + (boids_y[j]-boids_y[i])**2 < nearby_distance:
+                boid_x_velocities[i]=boid_x_velocities[i]+(boid_x_velocities[j]-boid_x_velocities[i])*nearby_coefficient/len(boids_x)
+                boid_y_velocities[i]=boid_y_velocities[i]+(boid_y_velocities[j]-boid_y_velocities[i])*nearby_coefficient/len(boids_x)
     # Move according to velocities
     for i in range(len(boids_x)):
         boids_x[i]=boids_x[i]+boid_x_velocities[i]
