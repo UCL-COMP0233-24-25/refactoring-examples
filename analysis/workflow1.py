@@ -2,29 +2,19 @@ from math import *
 
 # read sample files
 
-with open('data1.csv') as file1:
-    lines1 = file1.readlines()
-    data1 = []
-    for line in lines1:
-        row = []
-        for n in line.split(','):
-            row.append(float(n.strip()))
-        data1.append(row)
+def read_file(filename):
+    with open(filename, "r") as file:
+        lines = file.readlines()
+        data = []
+        for line in lines:
+            row_items = line.split(',')
+            row = [float(item.strip()) for item in row_items]
+            data.append(row)
+    return data
 
-with open('data2.csv') as file2:
-    lines2 = file2.readlines()
-    data2 = []
-    for line in lines2:
-        row = []
-        for n in line.split(','):
-            row.append(float(n.strip()))
-        data2.append(row)
-
-with open('weights.csv') as filew:
-    linew = filew.read()
-    w = []
-    for n in linew.split(','):
-        w.append(float(n.strip()))
+data1 = read_file("data1.csv")
+data2 = read_file("data2.csv")
+w = read_file("weights.csv")[0]
 
 results = []
 for i in range(len(data1)):
