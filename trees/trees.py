@@ -10,27 +10,27 @@ branches = [
 plt.plot([0, 0], [0, 1])  #
 for i in range(5):
     new_branches = []
-    for j in range(len(branches)):  # loop over d
-        new_branches.append(
-            [
-                branches[j][0] + branch_length * sin(branches[j][2] - 0.1),
-                branches[j][1] + branch_length * cos(branches[j][2] - 0.1),
-                branches[j][2] - 0.1,
-            ]
-        )
-        new_branches.append(
-            [
-                branches[j][0] + branch_length * sin(branches[j][2] + 0.1),
-                branches[j][1] + branch_length * cos(branches[j][2] + 0.1),
-                branches[j][2] + 0.1,
-            ]
-        )
-        plt.plot(
-            [branches[j][0], new_branches[-2][0]], [branches[j][1], new_branches[-2][1]]
-        )
-        plt.plot(
-            [branches[j][0], new_branches[-1][0]], [branches[j][1], new_branches[-1][1]]
-        )
-    d = new_branches
+    for branch in branches:  # Loop over existing branches
+        x, y, angle = branch
+
+        # Calculate new branch points
+        new_x1 = x + branch_length * sin(angle - 0.1)
+        new_y1 = y + branch_length * cos(angle - 0.1)
+        new_angle1 = angle - 0.1
+
+        new_x2 = x + branch_length * sin(angle + 0.1)
+        new_y2 = y + branch_length * cos(angle + 0.1)
+        new_angle2 = angle + 0.1
+
+        # Append new branches to the list
+        new_branches.append([new_x1, new_y1, new_angle1])
+        new_branches.append([new_x2, new_y2, new_angle2])
+
+        # Plot the new branches
+        plt.plot([x, new_x1], [y, new_y1])
+        plt.plot([x, new_x2], [y, new_y2])
+        
+    branches = new_branches
     branch_length *= 0.6
+    
 plt.savefig("tree.png")
