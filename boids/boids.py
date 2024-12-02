@@ -15,6 +15,9 @@ class Boids:
     velocity_x: float
     velocity_y: float
 
+def distance(boid1: Boids, boid2:Boids):
+    return (boid1.x - boid2.x)**2 + (boid1.y - boid2.y)**2
+
 def update_boids(boids_lst: list[Boids],
                  towards_middle_coefficient=0.01, fly_away_distance=100, nearby_distance=10000,
                  nearby_coefficient=0.125):
@@ -26,13 +29,13 @@ def update_boids(boids_lst: list[Boids],
     # Fly away from nearby boids
     for boid in boids_lst:
         for other_boid in boids_lst:
-            if (other_boid.x - boid.x)**2 + (other_boid.y - boid.y)**2 < fly_away_distance:
+            if distance(boid, other_boid) < fly_away_distance:
                 boid.velocity_x += boid.x - other_boid.x
                 boid.velocity_y += boid.y - other_boid.y
     # Try to match speed with nearby boids
     for boid in boids_lst:
         for other_boid in boids_lst:
-            if (other_boid.x - boid.x)**2 + (other_boid.y - boid.y)**2 < nearby_distance:
+            if distance(boid, other_boid) < nearby_distance:
                 boid.velocity_x += (other_boid.velocity_x - boid.velocity_x)*nearby_coefficient/len(boids_lst)
                 boid.velocity_y += (other_boid.velocity_y - boid.velocity_y)*nearby_coefficient/len(boids_lst)
     # Move according to velocities
