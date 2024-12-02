@@ -6,11 +6,13 @@ This code simulates the swarming behaviour of bird-like objects ("boids").
 """
 
 import random
+import numpy as np
+from numpy.ma.core import shape
 
-boids_x=[random.uniform(-450,50.0) for x in range(50)]
-boids_y=[random.uniform(300.0,600.0) for x in range(50)]
-boid_x_velocities=[random.uniform(0,10.0) for x in range(50)]
-boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
+boids_x=np.random.uniform(-450, 50., size=50)
+boids_y=np.random.uniform(300, 600., size = 50)
+boid_x_velocities=np.random.uniform(0,10, size=50)
+boid_y_velocities=np.random.uniform(-20,20,size=50)
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 def update_boids(boids):
